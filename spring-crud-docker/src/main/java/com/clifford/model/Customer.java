@@ -1,4 +1,4 @@
-package com.clifford;
+package com.clifford.model;
 
 
 import jakarta.persistence.*;
@@ -69,7 +69,8 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(id, customer.id) && Objects.equals(name, customer.name) && Objects.equals(email, customer.email) && Objects.equals(age, customer.age);
+        return Objects.equals(id, customer.id) && Objects.equals(name, customer.name)
+                && Objects.equals(email, customer.email) && Objects.equals(age, customer.age);
     }
 
     @Override

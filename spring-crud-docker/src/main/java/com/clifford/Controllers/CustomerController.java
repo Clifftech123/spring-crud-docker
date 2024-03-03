@@ -1,9 +1,11 @@
-package com.clifford;
+package com.clifford.Controllers;
 
+
+import com.clifford.Services.CustomerService;
+import com.clifford.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -12,45 +14,47 @@ public class CustomerController {
 
     // inject the customer repository
     @Autowired
-    private CustomerRespository customerRepository;
+    private CustomerService customerService;
 
 
     // get all customers
     @GetMapping
     public List<Customer> getAllCustomers(){
-        return customerRepository.findAll();
+        return customerService.getAllCustomers();
 
     }
-    // Get customer by it
+   // get customer by id
 
     @GetMapping("/{id}")
     public Customer getCustomer(@PathVariable Integer id) {
-        return customerRepository.findById(id).orElse(null);
+        return customerService.getCustomerById(id);
     }
 
      // Creat post new customer
      @PostMapping
      public Customer createCustomer(@RequestBody Customer customer) {
-         return customerRepository.save(customer);
+        return customerService.createCustomer(customer);
      }
 
-
+//    Update customer
      @PutMapping("/{id}")
     public  Customer UpdateCustomer (@PathVariable  Integer id, @RequestBody Customer customer) {
-        Customer customerToUpdate = customerRepository.findById(id).orElse(null);
+        Customer customerToUpdate = customerService.getCustomerById(id);
         if (customerToUpdate != null) {
             customerToUpdate.setName(customer.getName());
             customerToUpdate.setEmail(customer.getEmail());
             customerToUpdate.setAge(customer.getAge());
-            return customerRepository.save(customerToUpdate);
+            return customerService.createCustomer(customerToUpdate);
         }
         return null;
      }
 
+
+     // Delete customer
      @DeleteMapping("/{id}")
 
     public  void  deleteCustomer(@PathVariable Integer id) {
-        customerRepository.deleteById(id);
+        customerService.deleteCustomer(id);
      }
 
 
