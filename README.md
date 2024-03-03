@@ -1,6 +1,4 @@
-To enhance the README for your Spring Boot CRUD application with JPA, Docker, and PostgreSQL, we can add more detailed sections such as "Features," "Configuration," "API Endpoints," and "Contributing." Here's an enhanced version of your README:
 
-```markdown
 # Spring Boot CRUD Application with JPA, Docker, and PostgreSQL
 
 This is a simple Spring Boot application that demonstrates CRUD (Create, Read, Update, Delete) operations using JPA (Java Persistence API) for database interaction, Docker for containerization, and PostgreSQL as the database.
