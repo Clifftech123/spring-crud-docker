@@ -38,7 +38,7 @@ public CustomerService(CustomerRepository customerRepository) {
     }
 
     // updating customer
-    public Customer updateCustomer(Integer id, Customer customer) {
+    public Customer updateCustomer(Customer customer) {
         Customer customerToUpdate = customerRepository.findById(id).orElse(null);
         if (customerToUpdate != null) {
             customerToUpdate.setName(customer.getName());
@@ -52,7 +52,11 @@ public CustomerService(CustomerRepository customerRepository) {
 
     // deleting customer
 
-    public void deleteCustomer(Integer id) {
-        customerRepository.deleteById(id);
+    public boolean deleteCustomer(Integer id) {
+        if (customerRepository.existsById(id)) {
+            customerRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

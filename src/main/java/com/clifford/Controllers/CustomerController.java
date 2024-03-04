@@ -1,62 +1,87 @@
 package com.clifford.Controllers;
 
 
+import com.clifford.DTO.CustomerDTO;
+import com.clifford.Mapper.ICustomerMapper;
 import com.clifford.Services.CustomerService;
 import com.clifford.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/customers")
+@AllArgsConstructor
+@RequestMapping("/api")
 public class CustomerController {
 
     // inject the customer repository
     @Autowired
     private CustomerService customerService;
+    private ICustomerMapper customerMapper;
 
 
     // get all customers
-    @GetMapping
-    public List<Customer> getAllCustomers(){
-        return customerService.getAllCustomers();
+    @GetMapping("/customers/all")
+    public List<CustomerDTO> getAllCustomers() {
+        return customerService.getAllCustomers().stream()
+                .map(customerMapper::fromCustomer)
+                .collect(Collectors.toList());
 
     }
-   // get customer by id
+    // get customer by id
 
-    @GetMapping("/{id}")
-    public Customer getCustomer(@PathVariable Integer id) {
-        return customerService.getCustomerById(id);
+    @GetMapping(" /customers/id/{id}")
+    public ResponseEntity<CustomerDTO> getCustomer(@PathVariable Integer id) {
+        var customer = customerService.getCustomerById(id);
+
+         if (customer  != null) {
+            var foundCustomer = customerMapper.fromCustomer(customer);
+            return ResponseEntity.ok(foundCustomer);
+         }
+         return ResponseEntity.notFound().build();
+          
+
+
     }
 
-     // Creat post new customer
-     @PostMapping
-     public Customer createCustomer(@RequestBody Customer customer) {
-        return customerService.createCustomer(customer);
-     }
+    // Creat post new customer
+    @PostMapping("/customers")
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) {
+        var creatCustomer = customerMapper.toCustomer(customerDTO);
+        var createdCustomer = customerService.createCustomer(creatCustomer);
+        var customer = customerMapper.fromCustomer(createdCustomer);
+        return ResponseEntity.ok(customer);
+    }
 
-//    Update customer
-     @PutMapping("/{id}")
-    public  Customer UpdateCustomer (@PathVariable  Integer id, @RequestBody Customer customer) {
+    //    Update customer
+    @PutMapping("/customers/id/{id")
+    public ResponseEntity<?> updateCustomer(@PathVariable Integer id, @Validated @RequestBody CustomerDTO customerDTO) {
         Customer customerToUpdate = customerService.getCustomerById(id);
         if (customerToUpdate != null) {
-            customerToUpdate.setName(customer.getName());
-            customerToUpdate.setEmail(customer.getEmail());
-            customerToUpdate.setAge(customer.getAge());
-            return customerService.createCustomer(customerToUpdate);
+            customerToUpdate.setName(customerDTO.getName());
+            customerToUpdate.setEmail(customerDTO.getEmail());
+            customerToUpdate.setAge(customerDTO.getAge());
+            Customer updatedCustomer = customerService.updateCustomer(customerToUpdate);
+            return ResponseEntity.ok(updatedCustomer);
         }
-        return null;
-     }
+        return ResponseEntity.notFound().build();
+    }
 
 
-     // Delete customer
-     @DeleteMapping("/{id}")
-
-    public  void  deleteCustomer(@PathVariable Integer id) {
-        customerService.deleteCustomer(id);
-     }
-
+    // Delete customer
+    @DeleteMapping("/customers/id/{id")
+    public ResponseEntity<?> deleteCustomer(@PathVariable Integer id) {
+        boolean isDeleted = customerService.deleteCustomer(id);
+        if (isDeleted) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
+    }
 
 
 }

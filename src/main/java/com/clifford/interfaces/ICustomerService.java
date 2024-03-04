@@ -8,6 +8,6 @@ public interface ICustomerService {
     List<Customer> getAllCustomers();
     Customer getCustomerById(Integer id);
     Customer createCustomer(Customer customer);
-    void deleteCustomer(Integer id);
+    boolean deleteCustomer(Integer id);
 
 }
