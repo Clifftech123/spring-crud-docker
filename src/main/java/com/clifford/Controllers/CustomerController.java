@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/customers")
 public class CustomerController {
 
     // inject the customer repository
@@ -26,7 +26,7 @@ public class CustomerController {
 
 
     // get all customers
-    @GetMapping("/customers/all")
+    @GetMapping
     public List<CustomerDTO> getAllCustomers() {
         return customerService.getAllCustomers().stream()
                 .map(customerMapper::fromCustomer)
@@ -35,7 +35,7 @@ public class CustomerController {
     }
     // get customer by id
 
-    @GetMapping(" /customers/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<CustomerDTO> getCustomer(@PathVariable Integer id) {
         var customer = customerService.getCustomerById(id);
 
@@ -50,7 +50,7 @@ public class CustomerController {
     }
 
     // Creat post new customer
-    @PostMapping("/customers")
+    @PostMapping
     public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) {
         var creatCustomer = customerMapper.toCustomer(customerDTO);
         var createdCustomer = customerService.createCustomer(creatCustomer);
@@ -59,7 +59,7 @@ public class CustomerController {
     }
 
     //    Update customer
-    @PutMapping("/customers/id/{id")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateCustomer(@PathVariable Integer id, @Validated @RequestBody CustomerDTO customerDTO) {
         Customer customerToUpdate = customerService.getCustomerById(id);
         if (customerToUpdate != null) {
@@ -74,7 +74,7 @@ public class CustomerController {
 
 
     // Delete customer
-    @DeleteMapping("/customers/id/{id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCustomer(@PathVariable Integer id) {
         boolean isDeleted = customerService.deleteCustomer(id);
         if (isDeleted) {

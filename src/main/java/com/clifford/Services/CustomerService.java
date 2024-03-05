@@ -1,4 +1,5 @@
 package com.clifford.Services;
+
 import com.clifford.Repository.CustomerRepository;
 import com.clifford.interfaces.ICustomerService;
 import com.clifford.model.Customer;
@@ -8,13 +9,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CustomerService  implements ICustomerService {
+public class CustomerService implements ICustomerService {
 
     // inject the customer repository
     private final CustomerRepository customerRepository;
+    private Integer id;
 
     @Autowired
-public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
@@ -39,7 +41,8 @@ public CustomerService(CustomerRepository customerRepository) {
 
     // updating customer
     public Customer updateCustomer(Customer customer) {
-        Customer customerToUpdate = customerRepository.findById(id).orElse(null);
+        Customer customerToUpdate = customerRepository.findById(id).
+                orElse(null);
         if (customerToUpdate != null) {
             customerToUpdate.setName(customer.getName());
             customerToUpdate.setEmail(customer.getEmail());
