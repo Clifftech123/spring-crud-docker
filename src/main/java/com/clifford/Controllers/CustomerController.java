@@ -44,7 +44,7 @@ public class CustomerController {
             return ResponseEntity.ok(foundCustomer);
          }
          return ResponseEntity.notFound().build();
-          
+
 
 
     }
@@ -66,7 +66,7 @@ public class CustomerController {
             customerToUpdate.setName(customerDTO.getName());
             customerToUpdate.setEmail(customerDTO.getEmail());
             customerToUpdate.setAge(customerDTO.getAge());
-            Customer updatedCustomer = customerService.updateCustomer(customerToUpdate);
+            Customer updatedCustomer = customerService.updateCustomer(customerToUpdate).getBody();
             return ResponseEntity.ok(updatedCustomer);
         }
         return ResponseEntity.notFound().build();

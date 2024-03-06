@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 
     }
 
-    @ExceptionHandler({RuntimeException.class})
+    @ExceptionHandler({RuntimeException.class  })
     public ResponseEntity<Object> RuntimeException(RuntimeException exception) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
