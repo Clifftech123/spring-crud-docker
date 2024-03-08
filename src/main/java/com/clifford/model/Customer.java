@@ -21,6 +21,8 @@ public class Customer {
             generator = "customer_id_sequence"
     )
     private  Integer id ;
+
+
     private  String name ;
     private  String email;
     private  Integer age ;

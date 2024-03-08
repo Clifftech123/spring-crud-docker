@@ -46,16 +46,27 @@ public class CustomerController {
          return ResponseEntity.notFound().build();
 
 
-
     }
+
+     // fin customer by email
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<CustomerDTO> getCustomerByEmail(@PathVariable String email) {
+        var customer = customerService.getCustomerByEmail(email);
+        if (customer != null) {
+            var foundCustomer = customerMapper.fromCustomer(customer);
+            return ResponseEntity.ok(foundCustomer);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 
     // Creat post new customer
     @PostMapping
     public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) {
         var creatCustomer = customerMapper.toCustomer(customerDTO);
         var createdCustomer = customerService.createCustomer(creatCustomer);
-        var customer = customerMapper.fromCustomer(createdCustomer);
-        return ResponseEntity.ok(customer);
+        return ResponseEntity.ok((CustomerDTO) customerMapper.fromCustomer(createdCustomer));
     }
 
     //    Update customer
@@ -76,9 +87,9 @@ public class CustomerController {
     // Delete customer
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCustomer(@PathVariable Integer id) {
-        boolean isDeleted = customerService.deleteCustomer(id);
-        if (isDeleted) {
-            return ResponseEntity.notFound().build();
+        ResponseEntity<String> isDeleted = customerService.deleteCustomer(id);
+        if (isDeleted != null) {
+            return ResponseEntity.ok(isDeleted);
         }
         return ResponseEntity.noContent().build();
     }

@@ -1,6 +1,7 @@
 package com.clifford.Services;
 
 import com.clifford.Repository.CustomerRepository;
+import com.clifford.exception.CustomerAlreadyExistsException;
 import com.clifford.exception.CustomerNotFoundException;
 import com.clifford.interfaces.ICustomerService;
 import com.clifford.model.Customer;
@@ -45,13 +46,26 @@ public class CustomerService implements ICustomerService {
         return new ResponseEntity<>(customer, HttpStatus.OK).getBody();
     }
 
+    // Find customer by email
+
+    public Customer getCustomerByEmail(String email) {
+        return customerRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer with email " + email + " not found"));
+    }
+
+
+
     // creating new customer
 
-    @Override
-  
+
     public Customer createCustomer(Customer customer) {
+        if (customerRepository.findByEmail(customer.getEmail()).isPresent()) {
+            throw new CustomerAlreadyExistsException("Customer with email " + customer.getEmail() + " already exists");
+        }
         return customerRepository.save(customer);
     }
+
+
     // updating customer
     public ResponseEntity<Customer> updateCustomer(Customer customer) {
         Customer customerToUpdate = customerRepository.findById(id).orElse(null);
@@ -69,11 +83,11 @@ public class CustomerService implements ICustomerService {
 
     // deleting customer
     @Override
-    public boolean deleteCustomer(Integer id) {
+    public ResponseEntity<String> deleteCustomer(Integer id) {
         if (customerRepository.existsById(id)) {
             customerRepository.deleteById(id);
-            return true;
+            return new ResponseEntity<>("Customer with id " + id + " is deleted", HttpStatus.OK);
         }
-        return false;
+        return new ResponseEntity<>("Customer with id " + id + " not found", HttpStatus.NOT_FOUND);
     }
 }

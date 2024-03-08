@@ -10,5 +10,8 @@ public interface ICustomerMapper {
     Customer toCustomer(CustomerDTO customerDTO);
 CustomerDTO fromCustomer(Customer customer);
 
-    CustomerDTO fromCustomer(ResponseEntity<Customer> createdCustomer);
+
+
+
+
 }
